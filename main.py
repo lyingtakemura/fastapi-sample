@@ -1,46 +1,37 @@
-from enum import Enum
+from typing import Annotated
 
-from fastapi import FastAPI
-from pydantic import BaseModel
-
-
-class ModelName(str, Enum):
-    alexnet = "alexnet"
-    resnet = "resnet"
-    lenet = "lenet"
+from fastapi import FastAPI, status, UploadFile
+from pydantic import BaseModel, Field
 
 
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
+class User(BaseModel):
+    name: str = Field(max_length=100)
+    age: int = Field(gt=0, le=200)
+    location: str | None = None
 
 
 app = FastAPI()
 
 
-@app.get("/")
+@app.get("/", status_code=status.HTTP_200_OK)
 async def root():
     return {"message": "test"}
 
 
-@app.get("/items/{item_id}")
-async def read_item(item_id: int):
-    return {"item_id": item_id}
+@app.get("/users/")
+async def users() -> list[User]:
+    return [
+        User(name="test1", age=22),
+        User(name="test2", age=32, location="Italy"),
+        User(name="test3", age=42, location="Austria"),
+    ]
 
 
-@app.get("/models/{model_name}")
-async def get_model(model_name: ModelName):
-    if model_name is ModelName.alexnet:
-        return {"model_name": model_name, "message": "Deep Learning FTW!"}
-
-    if model_name.value == "lenet":
-        return {"model_name": model_name, "message": "LeCNN all the images"}
-
-    return {"model_name": model_name, "message": "Have some residuals"}
+@app.post("/users/", status_code=status.HTTP_201_CREATED)
+async def create_user(user: User) -> User:
+    return user
 
 
-@app.post("/items/")
-async def create_item(item: Item):
-    return item
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile):
+    return {"filename": file.filename, "content_type": file.content_type}
