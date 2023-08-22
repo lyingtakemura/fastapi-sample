@@ -19,22 +19,14 @@ def verify_password(plain_password, hashed_password):
     return password_context.verify(plain_password, hashed_password)
 
 
-def create_access_token(sub: str, expires_delta: int = None) -> str:
-    if expires_delta:
-        expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
-    else:
-        expires_delta = datetime.utcnow() + timedelta(minutes=1)
-
+def create_access_token(sub: str) -> str:
+    expires_delta = datetime.utcnow() + timedelta(minutes=1)
     payload = {"exp": expires_delta, "sub": sub}
     return jwt.encode(payload, settings.jwt_secret_key, settings.algorithm)
 
 
-def create_refresh_token(sub: str, expires_delta: int = None) -> str:
-    if expires_delta:
-        expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
-    else:
-        expires_delta = datetime.utcnow() + timedelta(minutes=60)
-
+def create_refresh_token(sub: str) -> str:
+    expires_delta = datetime.utcnow() + timedelta(minutes=60)
     payload = {"exp": expires_delta, "sub": sub}
     return jwt.encode(payload, settings.jwt_secret_key, settings.algorithm)
 
