@@ -20,6 +20,7 @@ class Item(ItemBase):
 
 class UserBase(BaseModel):
     email: str
+    username: str
 
 
 class UserCreate(UserBase):
@@ -33,3 +34,13 @@ class User(UserBase):
 
     class Config:
         from_attribute = True
+
+
+class Token(BaseModel):
+    access_token: str
+    refresh_token: str
+
+
+class TokenPayload(BaseModel):
+    sub: str = None
+    exp: int = None

@@ -1,3 +1,5 @@
+### META
+```
 models.py - sqlalchemy
 schemas.py - pydantic
 
@@ -8,3 +10,6 @@ But with ORM mode, as Pydantic itself will try to access the data it needs from 
 
 Also notice that there are response_models that have standard Python types like List[schemas.Item].
 But as the content/parameter of that List is a Pydantic model with orm_mode, the data will be retrieved and returned to the client as normally, without problems.
+
+openssl rand -hex 32
+```

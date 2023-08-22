@@ -14,3 +14,11 @@ url = URL.create(
 
 engine = create_engine(url, echo=True)
 session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+def db():
+    try:
+        db = session()
+        yield db
+    finally:
+        db.close()
