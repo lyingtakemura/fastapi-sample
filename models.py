@@ -26,5 +26,6 @@ class Item(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     user = relationship("User", back_populates="items")
 
+
 # Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)

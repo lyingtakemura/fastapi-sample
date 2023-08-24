@@ -1,3 +1,14 @@
+### ALEMBIC
+```
+set sqlalchemy.url in alembic.ini
+set base.metadata in env.py
+
+alembic init migrations
+alembic revision --autogenerate -m '_'
+alembic upgrade head
+```
+
+
 ### META
 ```
 models.py - sqlalchemy
