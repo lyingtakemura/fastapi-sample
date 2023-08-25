@@ -31,6 +31,10 @@ def on_startup():
     print("__EVENT_APP_STARTUP__")
 
 
+class TestClass:
+    x = 10
+
+
 @app.get("/users", response_model=list[schemas.User])
 def get_all_users(
     is_authenticated: get_current_user = Depends(),

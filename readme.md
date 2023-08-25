@@ -8,6 +8,10 @@ alembic revision --autogenerate -m '_'
 alembic upgrade head
 ```
 
+### PYTEST
+```
+pytest --verbose
+```
 
 ### META
 ```
