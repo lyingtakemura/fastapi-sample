@@ -20,7 +20,7 @@ from authentication import (
     verify_password,
     verify_refresh_token,
 )
-from database import db
+from database.connection import db
 from dependencies import get_current_user
 
 app = FastAPI()
