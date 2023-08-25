@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 import models
 import schemas
 from authentication import oauth2_scheme
-from database.connection import db
+from database import db
 from settings import settings
 
 
