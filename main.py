@@ -20,19 +20,15 @@ from authentication import (
     verify_password,
     verify_refresh_token,
 )
-from database import db
+from database import get_db
 from dependencies import get_current_user
 
 app = FastAPI()
 
 
-@app.on_event("startup")
-def on_startup():
-    print("__EVENT_APP_STARTUP__")
-
-
-class TestClass:
-    x = 10
+# @app.on_event("startup")
+# def on_startup():
+#     print("__EVENT_STARTUP__")
 
 
 @app.get("/users", response_model=list[schemas.User])
@@ -40,13 +36,13 @@ def get_all_users(
     is_authenticated: get_current_user = Depends(),
     skip: int = 0,
     limit: int = 100,
-    db: Session = Depends(db),
+    db: Session = Depends(get_db),
 ):
     return db.query(models.User).offset(skip).limit(limit).all()
 
 
 @app.get("/users/{user_id}", response_model=schemas.User)
-def get_user_by_id(user_id: int, db: Session = Depends(db)):
+def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter_by(id=user_id).first()
     if user:
         return user
@@ -56,13 +52,13 @@ def get_user_by_id(user_id: int, db: Session = Depends(db)):
 
 # ITEMS
 @app.get("/items", response_model=list[schemas.Item])
-def get_all_items(skip: int = 0, limit: int = 100, db: Session = Depends(db)):
+def get_all_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return db.query(models.Item).offset(skip).limit(limit).all()
 
 
 @app.post("/users/{user_id}/items", response_model=schemas.Item)
 def create_item_for_user(
-    user_id: int, payload: schemas.ItemCreate, db: Session = Depends(db)
+    user_id: int, payload: schemas.ItemCreate, db: Session = Depends(get_db)
 ):
     item = models.Item(
         title=payload.title, description=payload.description, user_id=user_id
@@ -75,9 +71,11 @@ def create_item_for_user(
 
 # AUTHENTICATION
 @app.post("/signup", response_model=schemas.User)
-def signup(payload: schemas.UserCreate, db: Session = Depends(db)):
+def signup(payload: schemas.UserCreate, db: Session = Depends(get_db)):
     if db.query(models.User).filter_by(email=payload.email).first():
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Already exists"
+        )
 
     user = models.User(
         username=payload.username,
@@ -93,7 +91,7 @@ def signup(payload: schemas.UserCreate, db: Session = Depends(db)):
 
 @app.post("/jwt/login", response_model=schemas.Token)
 async def jwt_login(
-    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(db)
+    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
 ):
     user = db.query(models.User).filter_by(username=form_data.username).first()
     if not user:
@@ -201,3 +199,8 @@ async def websocket_endpoint(websocket: WebSocket, client_id: int):
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         await manager.broadcast(f"Client #{client_id} left the chat")
+
+
+@app.get("/test")
+async def test():
+    return {"test": 0}

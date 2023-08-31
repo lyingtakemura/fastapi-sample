@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     algorithm: str = None
 
     @property
-    def database_url(self):
+    def SQLALCHEMY_DATABASE_URL(self):
         return f"postgresql://{self.db_user}:{self.db_pass}@{self.db_host}:{self.db_port}/{self.db_name}"
 
 

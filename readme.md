@@ -11,6 +11,17 @@ alembic upgrade head
 ### PYTEST
 ```
 pytest --verbose
+change traceback mode: --tb=no // --tb=short
+run specific test: pytest ./tests/test_main.py::TestSample::test_type_error
+tests matching a name pattern: pytest -k '_' // '_ and not (_ or _)'
+test structure: Arrange-Act-Assert
+show order of tests and fixtures: pytest --setup-show test_count.py
+@pytest.fixture(scope="function(default)|class|module|package|session")
+list available fixtures: pytest --fixtures -v // --fixtures-per-test
+always run fixture: @pytest.fixture(autouse=True)
+allow print: -s // --capture=no
+rename fixture: @pytest.fixture(name="_")
+before yield - setup code, after yield - teardown code
 ```
 
 ### META

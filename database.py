@@ -3,11 +3,11 @@ from sqlalchemy.orm import sessionmaker
 
 from settings import settings
 
-engine = create_engine(settings.database_url, echo=True)
+engine = create_engine(settings.SQLALCHEMY_DATABASE_URL, echo=False)
 session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-def db():
+def get_db():
     try:
         db = session()
         yield db
