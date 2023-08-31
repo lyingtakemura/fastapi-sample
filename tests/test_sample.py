@@ -1,5 +1,8 @@
 import pytest
 
+@pytest.fixture(scope='module')
+def sample_fixture():
+    return [x for x in range(10)]
 
 class TestSample:  # group related tests
     @pytest.mark.xfail()
