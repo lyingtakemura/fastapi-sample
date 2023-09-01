@@ -7,7 +7,7 @@ from models import Base
 
 
 @pytest.fixture(scope="session")
-def db_engine():
+def engine():
     engine = create_engine(
         "sqlite:///:memory:", connect_args={"check_same_thread": False}
     )
@@ -16,19 +16,12 @@ def db_engine():
 
 
 @pytest.fixture(scope="function")
-def db(db_engine):
-    connection = db_engine.connect()
-
-    # begin a non-ORM transaction
-    connection.begin()
-
-    # bind an individual Session to the connection
-    db = Session(bind=connection)
-
-    yield db
-
-    db.rollback()
-    connection.close()
+def db(engine):
+    with engine.connect() as connection: # connection.close() is implicit
+        connection.begin()
+        session = Session(bind=connection)
+        yield session
+        session.rollback()
 
 
 @pytest.fixture(scope="function")
