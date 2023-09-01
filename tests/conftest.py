@@ -18,7 +18,7 @@ def engine():
 
 @pytest.fixture()
 def db(engine):
-    with engine.connect() as connection: # connection.close() is implicit
+    with engine.connect() as connection:
         connection.begin()
         session = Session(bind=connection)
         yield session
