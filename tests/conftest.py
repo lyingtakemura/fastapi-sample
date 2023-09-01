@@ -2,6 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+
 from main import app, get_db
 from models import Base
 
@@ -15,7 +16,7 @@ def engine():
     yield engine
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def db(engine):
     with engine.connect() as connection: # connection.close() is implicit
         connection.begin()
@@ -24,7 +25,7 @@ def db(engine):
         session.rollback()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def client(db):
     app.dependency_overrides[get_db] = lambda: db
 
