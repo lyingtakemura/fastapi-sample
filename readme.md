@@ -8,6 +8,18 @@ alembic revision --autogenerate -m '_'
 alembic upgrade head
 ```
 
+### SQLALCHEMY
+```
+- engine.execute:
+raw sql
+- connection.exectute:
+raw sql with greater control over attributes of the connection, when it gets closed, etc
+- session.execute:
+Used for the ORM aspect of SQLAlchemy. They use connections and transactions under the hood
+to run their automatically-generated SQL statements.execute() is a convenience function that
+passes through to whatever the session is bound to (usually an engine, but can be a connection)
+```
+
 ### PYTEST
 ```
 pytest --verbose
