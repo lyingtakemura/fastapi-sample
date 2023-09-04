@@ -10,7 +10,7 @@ from models import Base
 @pytest.fixture(scope="session")
 def engine():
     engine = create_engine(
-        "sqlite:///:memory:", connect_args={"check_same_thread": False}
+        "sqlite://", connect_args={"check_same_thread": False}
     )
     Base.metadata.create_all(bind=engine)
     yield engine
