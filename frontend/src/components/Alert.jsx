@@ -1,7 +1,16 @@
+import { useState } from "react";
+
 export function Alert(props) {
+    const [visible, setVisible] = useState(true);
+
+    function handleClick() {
+        return setVisible(!visible);
+    }
+
     return (
         <div>
-            <h1>{props.message}</h1>
+            <button onClick={handleClick}>test</button>
+            {visible && <h1>{props.message}</h1>}
         </div>
-    )
+    );
 }
