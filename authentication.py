@@ -8,7 +8,7 @@ from passlib.context import CryptContext
 from settings import settings
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", scheme_name="JWT")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="jwt/login", scheme_name="JWT")
 
 
 def get_hashed_password(password):

@@ -1,36 +1,23 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field, SecretStr
 
 
-class ItemBase(BaseModel):
+class Item(BaseModel):
+    id: int
     title: str
     description: str | None = None
-
-
-class ItemCreate(ItemBase):
-    pass
-
-
-class Item(ItemBase):
-    id: int
     user_id: int
 
     class Config:
         from_attribute = True
 
 
-class UserBase(BaseModel):
-    email: str
+class User(BaseModel):
+    id: int | None = None
+    email: EmailStr
     username: str
-
-
-class UserCreate(UserBase):
-    password: str
-
-
-class User(UserBase):
-    id: int
-    is_active: bool
-    items: list[Item] = []
+    password: SecretStr = Field(exclude=True)
+    is_active: bool = Field(exclude=True, default=True)
+    items: list[Item] = Field(default_factory=list)
 
     class Config:
         from_attribute = True

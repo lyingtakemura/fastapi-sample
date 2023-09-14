@@ -4,8 +4,11 @@ set sqlalchemy.url in alembic.ini
 set base.metadata in env.py
 
 alembic init migrations
-alembic revision --autogenerate -m '_'
+alembic revision --autogenerate -m "Initial migration"
 alembic upgrade head
+
+pydantic model from orm: PYDANTIC_MODEL.from_orm(ORM_MODEL)
+orm model from pydantic: ORM_MODEL(**PYDANTIC_MODEL.dict())
 ```
 
 ### SQLALCHEMY
