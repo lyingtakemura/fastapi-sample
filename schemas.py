@@ -24,10 +24,7 @@ class User(BaseModel):
 
 
 class Token(BaseModel):
-    access_token: str
-    refresh_token: str
-
-
-class TokenPayload(BaseModel):
-    sub: str = None
-    exp: int = None
+    access_token: str | None = None
+    refresh_token: str | None = None
+    sub: str | None = Field(None, exclude=True)
+    exp: int | None = Field(None, exclude=True)

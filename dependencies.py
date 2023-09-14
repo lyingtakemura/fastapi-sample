@@ -16,7 +16,7 @@ async def get_current_user(
         payload = jwt.decode(
             token, settings.jwt_secret_key, algorithms=[settings.algorithm]
         )
-        token_data = schemas.TokenPayload(**payload)
+        token_data = schemas.Token(**payload)
         user = db.query(models.User).filter_by(email=token_data.sub).first()
     except JWTError:
         raise HTTPException(
