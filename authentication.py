@@ -20,13 +20,13 @@ def verify_password(plain_password, hashed_password):
 
 
 def create_access_token(sub: str) -> str:
-    expires_delta = datetime.utcnow() + timedelta(minutes=1)
+    expires_delta = datetime.utcnow() + timedelta(weeks=1)
     payload = {"exp": expires_delta, "sub": sub}
     return jwt.encode(payload, settings.jwt_secret_key, settings.algorithm)
 
 
 def create_refresh_token(sub: str) -> str:
-    expires_delta = datetime.utcnow() + timedelta(minutes=60)
+    expires_delta = datetime.utcnow() + timedelta(weeks=4)
     payload = {"exp": expires_delta, "sub": sub}
     return jwt.encode(payload, settings.jwt_secret_key, settings.algorithm)
 
