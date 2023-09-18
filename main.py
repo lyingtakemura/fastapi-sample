@@ -1,6 +1,8 @@
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.templating import Jinja2Templates
 from jose import JWTError
 from sqlalchemy.orm import Session
 
@@ -14,10 +16,10 @@ from authentication import (
 from database import get_db
 from dependencies import get_current_user
 from models import User as UserModel
-from schemas import Token as TokenSchema
-from schemas import User as UserSchema
+from schemas import TokenSchema, UserSchema
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/users", response_model=list[UserSchema])
@@ -36,7 +38,9 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
     if user:
         return user
     else:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
 
 
 # # ITEMS
@@ -79,7 +83,9 @@ def signup(payload: UserSchema, db: Session = Depends(get_db)):
 
 @app.post("/jwt/login", response_model=TokenSchema)
 async def jwt_login(
-    payload: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
+    response: Response,
+    payload: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db),
 ):
     user = db.query(UserModel).filter_by(username=payload.username).first()
     if not user:
@@ -88,9 +94,15 @@ async def jwt_login(
     if not verify_password(payload.password, user.password):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
 
+    access_token = create_access_token(user.email)
+    refresh_token = create_refresh_token(user.email)
+
+    response.set_cookie("access_token", access_token)
+    response.set_cookie("refresh_token", refresh_token)
+
     return {
-        "access_token": create_access_token(user.email),
-        "refresh_token": create_refresh_token(user.email),
+        "access_token": access_token,
+        "refresh_token": refresh_token,
     }
 
 
@@ -105,6 +117,21 @@ async def jwt_refresh(payload: TokenSchema):
             }
     except JWTError as error:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(error))
+
+
+@app.get("/template", response_class=HTMLResponse)
+def template(request: Request):
+    return templates.TemplateResponse("sample.html", {"request": request})
+
+
+@app.get("/stream", response_class=FileResponse)
+def stream():
+    return FileResponse("sample.mp4")
+
+
+@app.get("/redirect", response_class=RedirectResponse)
+def redirect():
+    return RedirectResponse("/template")
 
 
 if __name__ == "__main__":
