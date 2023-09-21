@@ -1,12 +1,24 @@
 from fastapi import Depends, HTTPException, status
 from jose import JWTError, jwt
-from sqlalchemy.orm import Session
+from pymongo import MongoClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
 
 import models
 import schemas
 from authentication import oauth2_scheme
-from database import get_db
 from settings import settings
+
+engine = create_engine(settings.SQLALCHEMY_DATABASE_URL, echo=False)
+session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+def get_db():
+    try:
+        db = session()
+        yield db
+    finally:
+        db.close()
 
 
 async def get_current_user(
@@ -28,3 +40,12 @@ async def get_current_user(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
 
     return user
+
+
+def get_mongodb():
+    try:
+        client = MongoClient("localhost", 27017)
+        db = client["test-db"]
+        yield db
+    finally:
+        client.close()

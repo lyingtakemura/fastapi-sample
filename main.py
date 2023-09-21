@@ -1,9 +1,10 @@
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.templating import Jinja2Templates
 from jose import JWTError
+from pymongo import MongoClient
 from sqlalchemy.orm import Session
 
 from authentication import (
@@ -13,8 +14,7 @@ from authentication import (
     verify_password,
     verify_refresh_token,
 )
-from database import get_db
-from dependencies import get_current_user
+from dependencies import get_current_user, get_db, get_mongodb
 from models import User as UserModel
 from schemas import TokenSchema, UserSchema
 
@@ -132,6 +132,25 @@ def stream():
 @app.get("/redirect", response_class=RedirectResponse)
 def redirect():
     return RedirectResponse("/template")
+
+
+@app.post("/mongo")
+def mongo_post(payload: UserSchema, mongo: MongoClient = Depends(get_mongodb)):
+    users = mongo["users"]
+    user = UserSchema(
+        username=payload.username,
+        email=payload.email,
+        password=get_hashed_password(payload.password.get_secret_value()),
+    )
+    new_user = users.insert_one(user.model_dump())
+    created_user = users.find_one({"_id": new_user.inserted_id}, {"_id": False})
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=created_user)
+
+
+@app.get("/mongo")
+def mongo_get(mongo: MongoClient = Depends(get_mongodb)):
+    result = list(mongo["users"].find({}, {"_id": False}))  # find() returns a cursor
+    return JSONResponse(status_code=status.HTTP_200_OK, content=result)
 
 
 if __name__ == "__main__":
