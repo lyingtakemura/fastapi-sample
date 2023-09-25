@@ -12,8 +12,8 @@ from dependencies import (
     verify_password,
     verify_refresh_token,
 )
-from users.models import User
-from users.schemas import TokenSchema, UserSchema
+from models import User
+from schemas import TokenSchema, UserSchema
 
 urls = APIRouter(prefix="", tags=["users"])
 

@@ -5,8 +5,8 @@ from dependencies import (
     get_current_user,
     get_db,
 )
-from users.models import User
-from posts.schemas import PostSchema
+from models import User
+from schemas import PostSchema
 
 urls = APIRouter(prefix="/posts", tags=["posts"])
 

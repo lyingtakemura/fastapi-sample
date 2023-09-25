@@ -8,8 +8,8 @@ from pymongo import MongoClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from users.models import User
-from users.schemas import TokenSchema
+from models import User
+from schemas import TokenSchema
 from settings import settings
 
 engine = create_engine(settings.SQLALCHEMY_DATABASE_URL, echo=False)

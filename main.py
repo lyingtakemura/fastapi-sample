@@ -5,9 +5,9 @@ from fastapi.templating import Jinja2Templates
 from pymongo import MongoClient
 
 from dependencies import get_hashed_password, get_mongodb
-from posts.router import urls as PostRouter
-from users.router import urls as UserRouter
-from users.schemas import UserSchema
+from routers.posts import urls as PostRouter
+from routers.users import urls as UserRouter
+from schemas import UserSchema
 
 app = FastAPI()
 app.include_router(UserRouter)
