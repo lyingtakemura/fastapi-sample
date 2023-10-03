@@ -1,8 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import relationship
 
-
-Base = declarative_base()
+from configuration.sqlalchemy import Base
 
 
 class User(Base):
@@ -25,6 +24,7 @@ class Item(Base):
     description = Column(String, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     user = relationship("User", back_populates="items")
+
 
 # from database import engine
 # Base.metadata.create_all(engine)

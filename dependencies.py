@@ -5,26 +5,15 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pymongo import MongoClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
 
+from configuration.settings import settings
+from configuration.sqlalchemy import get_db
 from models import User
 from schemas import TokenSchema
-from settings import settings
-
-engine = create_engine(settings.SQLALCHEMY_DATABASE_URL, echo=False)
-session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="jwt/login", scheme_name="JWT")
-
-
-def get_db():
-    try:
-        db = session()
-        yield db
-    finally:
-        db.close()
 
 
 async def get_current_user(
