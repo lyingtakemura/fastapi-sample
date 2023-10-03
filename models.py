@@ -26,5 +26,3 @@ class Item(Base):
     user = relationship("User", back_populates="items")
 
 
-# from database import engine
-# Base.metadata.create_all(engine)
