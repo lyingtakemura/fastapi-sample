@@ -1,11 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from dependencies import (
-    get_current_user,
-    get_db,
-)
-from models import User
+from dependencies import get_db
 from schemas import PostSchema
 
 urls = APIRouter(prefix="/posts", tags=["posts"])
