@@ -4,10 +4,10 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, Redirect
 from fastapi.templating import Jinja2Templates
 from pymongo import MongoClient
 
-from dependencies import get_hashed_password, get_mongodb
+from controllers.jwt import urls as JWTRouter
 from controllers.posts import urls as PostRouter
 from controllers.users import urls as UserRouter
-from controllers.jwt import urls as JWTRouter
+from dependencies import get_hashed_password, get_mongodb
 from schemas import UserSchema
 
 app = FastAPI()
