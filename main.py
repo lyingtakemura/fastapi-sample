@@ -1,6 +1,6 @@
 import uvicorn
-from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
+from fastapi import FastAPI, Request, status
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from urls.posts import urls as POST_ROUTER
@@ -10,6 +10,11 @@ app = FastAPI()
 app.include_router(POST_ROUTER)
 app.include_router(USER_ROUTER)
 templates = Jinja2Templates(directory="templates")
+
+
+@app.get("/")
+def home(response_class=RedirectResponse):
+    return RedirectResponse("/docs")
 
 
 @app.get("/template", response_class=HTMLResponse)
