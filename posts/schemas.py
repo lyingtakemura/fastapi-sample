@@ -12,4 +12,4 @@ class PostInSchema(PostSchema):
 
 class PostOutSchema(PostSchema):
     id: int
-    user_id: int
+    # user_id: int
