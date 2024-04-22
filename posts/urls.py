@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 
-from posts.schema import PostInSchema, PostOutSchema
+from posts.schemas import PostInSchema, PostOutSchema
 
 url = APIRouter(prefix="/posts", tags=["posts"])
 
