@@ -1,12 +1,10 @@
 import uvicorn
 from fastapi import FastAPI
 
+from posts.url import url as post_url
+
 app = FastAPI()
-
-
-@app.get("/")
-def root():
-    return {"response": "test"}
+app.include_router(post_url)
 
 
 if __name__ == "__main__":
