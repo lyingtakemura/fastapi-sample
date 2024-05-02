@@ -10,13 +10,13 @@ client = TestClient(app)
 
 
 def test_should_create_post():
-    response = client.post("/posts", json={"title": "test title", "body": "test body"})
+    response = client.post("/api/v1/posts", json={"title": "test title", "body": "test body"})
     assert response.status_code == 201
     assert response.json() == {"id": 1, "title": "test title", "body": "test body"}
 
 
 def test_should_get_all_posts():
-    response = client.get("/posts")
+    response = client.get("/api/v1/posts")
     assert response.status_code == 200
     obj = response.json()[0]
     assert obj["id"] == 1
@@ -25,7 +25,7 @@ def test_should_get_all_posts():
 
 
 def test_should_get_post():
-    response = client.get("/posts/1")
+    response = client.get("/api/v1/posts/1")
     assert response.status_code == 200
     obj = response.json()
     assert obj["id"] == 1
@@ -34,7 +34,7 @@ def test_should_get_post():
 
 
 def test_should_update_post():
-    response = client.put("/posts/1", params={"title": "updated", "body": "updated"})
+    response = client.put("/api/v1/posts/1", params={"title": "updated", "body": "updated"})
     assert response.status_code == 200
     obj = response.json()
     assert obj["id"] == 1
@@ -43,7 +43,7 @@ def test_should_update_post():
 
 
 def test_should_delete_post():
-    response = client.delete("/posts/1")
+    response = client.delete("/api/v1/posts/1")
     assert response.status_code == 200
     obj = response.json()
     assert obj["id"] == 1
@@ -52,5 +52,5 @@ def test_should_delete_post():
 
 
 def test_should_return_not_found_post():
-    response = client.get("/posts/1")
+    response = client.get("/api/v1/posts/1")
     assert response.status_code == 404
