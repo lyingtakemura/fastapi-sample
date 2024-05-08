@@ -20,9 +20,6 @@ class Base(DeclarativeBase):
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
 
 
-from posts.models import Post
-
-
 def get_session():
     with Session() as session:
         yield session

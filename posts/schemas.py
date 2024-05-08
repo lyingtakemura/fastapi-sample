@@ -6,10 +6,10 @@ class PostSchema(BaseModel):
     body: str
 
 
-class PostInSchema(PostSchema):
+class PostPayloadSchema(PostSchema):
     pass
 
 
-class PostOutSchema(PostSchema):
+class PostResponseSchema(PostSchema):
     id: int
-    # user_id: int
+    user_id: int 
